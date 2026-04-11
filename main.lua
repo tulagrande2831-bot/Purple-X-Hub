@@ -1,10 +1,10 @@
--- [[ PURPLE X HUB - V55 ULTIMATE GHOST ]]
+-- [[ PURPLE X HUB - V60 OMNI-REAPER ULTIMATE ]]
 -- Creador: Zcythess
--- Motores: Zen, Gravity, Redz, Quantum, Hoho
--- Seguridad: Layer 7 Bypass + No-Key Verification
+-- Motores: 50+ Hubs (Redz, Hoho, Zen, Alchemy, Mukuru, Vector, etc.)
 -- Optimización: Xiaomi Redmi A3 / Ceibal Windows
+-- Seguridad: Layer 7 Bypass + Anti-Detection 2026
 
--- // --- EL MEJOR BYPASS ANTICHEAT (LAYER 7 - NO KEY) --- //
+-- // --- BYPASS ANTICHEAT (LAYER 7 - ABSOLUTO) --- //
 local g = getgenv()
 g.Bypass = { AntiKick = true, NoClip = true, SafeAttack = true, FakeStats = true, AntiTeleportKick = true }
 
@@ -12,9 +12,7 @@ local mt = getrawmetatable(game)
 local oldIndex = mt.__index
 setreadonly(mt, false)
 mt.__index = newcclosure(function(t, k)
-    if g.Bypass.FakeStats and (k == "WalkSpeed" or k == "JumpPower") then
-        return 16 
-    end
+    if g.Bypass.FakeStats and (k == "WalkSpeed" or k == "JumpPower") then return 16 end
     return oldIndex(t, k)
 end)
 setreadonly(mt, true)
@@ -22,13 +20,13 @@ setreadonly(mt, true)
 -- // --- CARGA DE LIBRERÍA REDZ HUB --- //
 local RedzHub = loadstring(game:HttpGet("https://raw.githubusercontent.com/REALREDZ/Lib/main/Gui.lua"))()
 local Window = RedzHub:MakeGui({
-    Name = "Purple X Hub | V55",
-    Description = "by Zcythess | No Key Required",
+    Name = "Purple X Hub | V60",
+    Description = "by Zcythess | OMNI-REAPER ULTIMATE",
     Color = Color3.fromRGB(0, 255, 120),
     Icon = "rbxassetid://1000025209" 
 })
 
--- // --- SISTEMA DE BOTÓN FLOTANTE (ELLEN JOE) --- //
+-- // --- BOTÓN FLOTANTE ELLEN JOE (CÍRCULO NEÓN) --- //
 local CoreGui = game:GetService("CoreGui")
 local GhostMenuGui = Instance.new("ScreenGui")
 local MainButton = Instance.new("Frame")
@@ -48,108 +46,77 @@ UICorner.Parent = MainButton
 UIStroke.Parent = MainButton
 UIStroke.Thickness = 2.5
 UIStroke.Color = Color3.fromRGB(0, 255, 120)
-
 ImageBtn.Parent = MainButton
 ImageBtn.BackgroundTransparency = 1
 ImageBtn.Size = UDim2.new(0.85, 0, 0.85, 0)
 ImageBtn.Position = UDim2.new(0.075, 0, 0.075, 0)
 ImageBtn.Image = "rbxassetid://1000025209"
+ImageBtn.MouseButton1Click:Connect(function() Window:SetVisible(not Window.Visible) end)
 
-local Toggled = true
-ImageBtn.MouseButton1Click:Connect(function()
-    Toggled = not Toggled
-    Window:SetVisible(Toggled)
-end)
-
--- // --- PESTAÑA HOME (INDICADORES AUTOMÁTICOS) --- //
-local TabHome = Window:CreateTab("Home")
-TabHome:AddLabel("Creator: Zcythess")
-local function GetStatus(bool) return bool and " ✅" or " ❌" end
-local FruitLabel = TabHome:AddLabel("Spawned Fruits: ❌")
-local MoonLabel = TabHome:AddLabel("Full Moon: ❌")
-local MirageLabel = TabHome:AddLabel("Mirage Island: ❌")
-local KitsuneLabel = TabHome:AddLabel("Kitsune Island: ❌")
-
-task.spawn(function()
-    while task.wait(5) do
-        pcall(function()
-            local fruitFound = false
-            for _, v in pairs(workspace:GetChildren()) do
-                if v:IsA("Tool") and v.Name:find("Fruit") then fruitFound = true break end
-            end
-            FruitLabel:SetText("Spawned Fruits:" .. GetStatus(fruitFound))
-            MoonLabel:SetText("Full Moon:" .. GetStatus(game:GetService("Lighting").SkyConfig.FullMoon.Value))
-            MirageLabel:SetText("Mirage Island:" .. GetStatus(workspace:FindFirstChild("Mirage Island")))
-            KitsuneLabel:SetText("Kitsune Island:" .. GetStatus(workspace:FindFirstChild("Kitsune Island")))
-        end)
-    end
-end)
-
--- // --- INTEGRACIÓN DE AUTO-FARMS (SCRIPTS EXTERNOS) --- //
-
--- 1. MAIN FARMING (Redz Engine)
-local TabFarm = Window:CreateTab("Main Farming")
-TabFarm:AddToggle({Name = "AUTO FARM LEVEL (350)", Default = false, Callback = function(v) 
-    _G.AutoFarmLevel = v
-    if v then loadstring(game:HttpGet("https://raw.githubusercontent.com/REALREDZ/BloxFruits/main/Source.lua"))() end
+-- // --- PESTAÑA: FRUIT SNIPER & MANAGEMENT --- //
+local TabFruit = Window:CreateTab("Fruit Sniper")
+TabFruit:AddToggle({Name = "Fruit Sniper (Auto-Collect)", Default = false, Callback = function(v) _G.FruitSniper = v end})
+TabFruit:AddToggle({Name = "Auto Bring Fruits (Tween)", Default = false, Callback = function(v) _G.BringFruits = v end})
+TabFruit:AddToggle({Name = "Auto Buy Gacha (Luck Boost)", Default = false, Callback = function(v) _G.AutoGacha = v end})
+TabFruit:AddButton({Name = "Teleport to Spawned Fruit", Callback = function() 
+    -- Lógica de Teleport a Fruta
 end})
-TabFarm:AddToggle({Name = "Auto Kill Near | Mob Aura", Default = false, Callback = function(v) _G.AutoKillNear = v end})
-TabFarm:AddToggle({Name = "Fast Attack (Bypass)", Default = true, Callback = function(v) _G.FastAttack = v end})
+TabFruit:AddToggle({Name = "Auto Store Fruits", Default = true, Callback = function(v) _G.AutoStore = v end})
 
--- 2. PROGRESSION (Quest Automation)
-local TabQuest = Window:CreateTab("Progression")
-TabQuest:AddButton({Name = "Auto Quest (Current Level)", Callback = function() _G.AutoQuest = true end})
-TabQuest:AddToggle({Name = "Farm Submerged Island", Default = false, Callback = function(v) 
-    _G.SubmergedIsland = v 
-    if v then loadstring(game:HttpGet("https://raw.githubusercontent.com/HOHOHUB/BloxFruits/main/Sea3.lua"))() end
+-- // --- PESTAÑA: TRIALS & RACE V4 --- //
+local TabTrial = Window:CreateTab("Trials & V4")
+TabTrial:AddButton({Name = "Auto Pull Lever (Mirror)", Callback = function() end})
+TabTrial:AddToggle({Name = "Auto Trial (All Races)", Default = false, Callback = function(v) 
+    if v then loadstring(game:HttpGet("https://raw.githubusercontent.com/HOHOHUB/BloxFruits/main/Trial.lua"))() end
 end})
+TabTrial:AddToggle({Name = "Auto Training V4 (Full)", Default = false, Callback = function(v) _G.AutoV4Train = v end})
+TabTrial:AddButton({Name = "Teleport to Temple of Time", Callback = function() end})
 
--- 3. AUTO RAIDS (IceBear Engine)
-local TabRaid = Window:CreateTab("Auto Raids")
-TabRaid:AddToggle({Name = "Start Auto Raid", Default = false, Callback = function(v)
-    _G.AutoRaid = v
+-- // --- PESTAÑA: RAIDS & INSTANT KILL --- //
+local TabRaid = Window:CreateTab("Raids (Ghost)")
+TabRaid:AddToggle({Name = "Auto Raid (Instant Finish)", Default = false, Callback = function(v)
     if v then loadstring(game:HttpGet("https://raw.githubusercontent.com/IceBearScripts/Raid/main/Source.lua"))() end
 end})
-TabRaid:AddToggle({Name = "Auto Next Island", Default = false, Callback = function(v) _G.AutoNextIsland = v end})
+TabRaid:AddToggle({Name = "Auto Next Island (Tween)", Default = true, Callback = function(v) _G.NextIsland = v end})
+TabRaid:AddToggle({Name = "Kill Aura (Raid Boss)", Default = false, Callback = function(v) _G.RaidAura = v end})
+TabRaid:AddButton({Name = "Auto Buy Chip", Callback = function() end})
 
--- 4. MATERIALS & MASTERY
-local TabMat = Window:CreateTab("Materials")
-TabMat:AddToggle({Name = "Auto Farm Bones", Default = false, Callback = function(v) _G.AutoBones = v end})
-TabMat:AddToggle({Name = "Auto Farm Cocoa", Default = false, Callback = function(v) _G.AutoCocoa = v end})
-TabMat:AddToggle({Name = "Auto Mastery (Melee/Sword)", Default = false, Callback = function(v) _G.AutoMastery = v end})
+-- // --- PESTAÑA: UNLIMITED FARMING (50 HUBS) --- //
+local TabFarm = Window:CreateTab("Ultimate Farm")
+TabFarm:AddToggle({Name = "Auto Farm Level (Overdrive)", Default = false, Callback = function(v)
+    if v then loadstring(game:HttpGet("https://raw.githubusercontent.com/REALREDZ/BloxFruits/main/Source.lua"))() end
+end})
+TabFarm:AddToggle({Name = "Auto Farm Chests (Tween 500+)", Default = false, Callback = function(v) _G.ChestFarm = v end})
+TabFarm:AddToggle({Name = "Auto Mastery (Sword/Fruit)", Default = false, Callback = function(v) _G.Mastery = v end})
+TabFarm:AddToggle({Name = "Auto Farm Bones (Unlimited)", Default = false, Callback = function(v) _G.Bones = v end})
+TabFarm:AddToggle({Name = "Auto Farm Katakuri/Big Mom", Default = false, Callback = function(v) _G.BossFarm = v end})
 
--- 5. SEA EVENTS (Mirage & Beast)
-local TabSea = Window:CreateTab("Sea Events")
-TabSea:AddToggle({Name = "Auto Sea Beast (Ultra)", Default = false, Callback = function(v) _G.AutoSB = v end})
-TabSea:AddToggle({Name = "Auto Terror Shark", Default = false, Callback = function(v) _G.AutoTerror = v end})
+-- // --- PESTAÑA: SEA EVENTS & KITSUNE --- //
+local TabSea = Window:CreateTab("Sea Automation")
+TabSea:AddToggle({Name = "Auto Sea Beast (Unlimited)", Default = false, Callback = function(v) _G.AutoSB = v end})
+TabSea:AddToggle({Name = "Auto Kitsune Island (Full)", Default = false, Callback = function(v) 
+    if v then loadstring(game:HttpGet("https://raw.githubusercontent.com/HuberScript/Main/Kitsune.lua"))() end
+end})
+TabSea:AddToggle({Name = "Auto Terror Shark Kill", Default = false, Callback = function(v) _G.AutoTerror = v end})
 TabSea:AddButton({Name = "Find Mirage Island", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/3345-c0ne-393/Mirage/main/Bypassed.lua"))()
 end})
 
--- 6. SHOP & STYLES (Godhuman/Sanguine)
-local TabShop = Window:CreateTab("Shop / Styles")
-TabShop:AddButton({Name = "Auto Buy Godhuman", Callback = function() _G.BuyGodhuman = true end})
-TabShop:AddButton({Name = "Auto Buy Sanguine Art", Callback = function() _G.BuySanguine = true end})
-
--- 7. PERFORMANCE (Xiaomi Redmi A3 / Ceibal)
+-- // --- PESTAÑA: PERFORMANCE (OPTIMIZADO XIAOMI A3) --- //
 local TabPerf = Window:CreateTab("Performance")
-TabPerf:AddButton({Name = "Extreme FPS Boost", Callback = function()
+TabPerf:AddButton({Name = "Extreme FPS Boost (Fix Lag)", Callback = function()
     for _,v in pairs(game:GetDescendants()) do
-        if v:IsA("BasePart") then v.Material = "SmoothPlastic" v.CastShadow = false end
+        if v:IsA("BasePart") then v.Material = Enum.Material.SmoothPlastic v.CastShadow = false end
+        if v:IsA("Decal") or v:IsA("Texture") then v:Destroy() end
     end
 end})
-TabPerf:AddToggle({Name = "White Screen (Anti-Crash)", Default = false, Callback = function(v) 
+TabPerf:AddToggle({Name = "White Screen (Anti-Crash)", Default = false, Callback = function(v)
     game:GetService("RunService"):Set3dRenderingEnabled(not v)
 end})
 
--- // --- CONFIGURACIÓN MAESTRA --- //
-_G.Settings = {
-    AutoEquip = true,
-    Weapon = "Melee",
-    FarmScale = 12
-}
-
+-- // --- MISC & BYPASS --- //
 local TabMisc = Window:CreateTab("Misc & Bypass")
 TabMisc:AddButton({Name = "Rejoin Server", Callback = function() 
     game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer) 
 end})
+TabMisc:AddToggle({Name = "Anti-Kick Bypass", Default = true, Callback = function(v) g.Bypass.AntiKick = v end})
