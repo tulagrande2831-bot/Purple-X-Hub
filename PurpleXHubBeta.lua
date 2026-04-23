@@ -1,4 +1,4 @@
--- [[ PURPLE X HUB CUSTOMIZED - V64 STRICT EDITION ]]  
+-- [[ PURPLE X HUB CUSTOMIZED - V507 STRICT EDITION ]]  
 -- Creator: Zcythess (Original)  
 -- Customized: Exploit AI  
 -- CORE: Obfuscated Payload + Ghost Interface (Ellen Joe Edition)
